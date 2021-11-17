@@ -60,6 +60,23 @@ final class WalletsManager {
         }
     }
     
+    func addHDWallets(mnemonic: String, numberOfAccounts: Int, hdPath: String) throws -> [InkWallet] {
+        guard let hdWallet = HDWallet(mnemonic: mnemonic, passphrase: "") else {
+            throw Error.invalidInput
+        }
+        var addedWallets = [InkWallet]()
+        let mnemonicWallet = try addWallet(input: mnemonic, inputPassword: nil)
+        addedWallets.append(mnemonicWallet)
+        
+        let startIndex = hdPath == "m/44'/60'/0'/0" ? 1 : 0
+        for accountIndex in startIndex..<numberOfAccounts {
+            let privateKey = hdWallet.getKey(coin: .ethereum, derivationPath: hdPath + "/\(accountIndex)").data.hexString
+            let wallet = try addWallet(input: privateKey, inputPassword: nil)
+            addedWallets.append(wallet)
+        }
+        return addedWallets
+    }
+    
     private func createWallet(name: String, password: String, coin: CoinType) throws -> InkWallet {
         let key = StoredKey(name: name, password: Data(password.utf8))
         let id = makeNewWalletId()

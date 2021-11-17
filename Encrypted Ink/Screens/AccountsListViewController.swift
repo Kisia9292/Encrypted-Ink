@@ -10,7 +10,7 @@ class AccountsListViewController: NSViewController {
     
     private var chain = EthereumChain.ethereum
     var onSelectedWallet: ((Int, InkWallet) -> Void)?
-    var newWalletId: String?
+    var newWalletIds = [String]()
     
     enum CellModel {
         case wallet
@@ -18,7 +18,7 @@ class AccountsListViewController: NSViewController {
     }
     
     enum AddAccountOption {
-        case createNew, importExisting
+        case createNew, importExisting, importFromMetamask
         
         var title: String {
             switch self {
@@ -26,6 +26,8 @@ class AccountsListViewController: NSViewController {
                 return "🌱  Create New"
             case .importExisting:
                 return "💼  Import Existing"
+            case .importFromMetamask:
+                return "🦊  Import MetaMask"
             }
         }
     }
@@ -139,17 +141,20 @@ class AccountsListViewController: NSViewController {
         
         chain = selectedChain
     }
-    
+
     @IBAction func addButtonTapped(_ sender: NSButton) {
         let menu = sender.menu
         
         let createItem = NSMenuItem(title: "", action: #selector(didClickCreateAccount), keyEquivalent: "")
         let importItem = NSMenuItem(title: "", action: #selector(didClickImportAccount), keyEquivalent: "")
+        let metamaskItem = NSMenuItem(title: "", action: #selector(didClickImportFromMetamask), keyEquivalent: "")
         let font = NSFont.systemFont(ofSize: 21, weight: .bold)
         createItem.attributedTitle = NSAttributedString(string: AddAccountOption.createNew.title, attributes: [.font: font])
         importItem.attributedTitle = NSAttributedString(string: AddAccountOption.importExisting.title, attributes: [.font: font])
+        metamaskItem.attributedTitle = NSAttributedString(string: AddAccountOption.importFromMetamask.title, attributes: [.font: font])
         menu?.addItem(createItem)
         menu?.addItem(importItem)
+        menu?.addItem(metamaskItem)
         
         var origin = sender.frame.origin
         origin.x += sender.frame.width
@@ -169,9 +174,60 @@ class AccountsListViewController: NSViewController {
         }
     }
     
+    @objc private func didClickImportFromMetamask() {
+        guard !NSRunningApplication.isGoogleChromeRunning else {
+            Alert.showWithMessage("Please close Google Chrome and try again.", style: .critical)
+            return
+        }
+        let metamaskPath: String
+        do {
+            metamaskPath = try MetamaskImporter.selectMetamaskDirectory()
+        } catch MetamaskImporter.MetamaskError.userClickedCancel {
+            return
+        } catch {
+            Alert.showWithMessage("Something went wrong.", style: .critical)
+            return
+        }
+        
+        let passwordAlert = PasswordAlert(title: "Enter MetaMask password.")
+        DispatchQueue.main.async {
+            passwordAlert.passwordTextField.becomeFirstResponder()
+        }
+        
+        if passwordAlert.runModal() == .alertFirstButtonReturn {
+            let passphrase = passwordAlert.passwordTextField.stringValue
+            let alert = LoadingAlert(title: "Importing accounts from MetaMask...")
+            guard let window = view.window else { return }
+            var didTapCancelButton = false
+            alert.beginSheetModal(for: window) { response in
+                if response == .alertFirstButtonReturn {
+                    didTapCancelButton = true
+                }
+            }
+            DispatchQueue.global(qos: .userInitiated).async {
+                let addedWallets = try? MetamaskImporter.importFromPath(metamaskPath, passphrase: passphrase)
+                DispatchQueue.main.async { [weak self] in
+                    guard !didTapCancelButton else { return }
+                    self?.view.window?.endSheet(alert.window)
+
+                    if let addedWallets = addedWallets {
+                        self?.newWalletIds = addedWallets.map { $0.id }
+                        self?.reloadHeader()
+                        self?.updateCellModels()
+                        self?.tableView.reloadData()
+                        self?.blinkNewWalletCellIfNeeded()
+                    } else {
+                        Alert.showWithMessage("Failed to import from MetaMask.", style: .critical)
+                    }
+                }
+            }
+        }
+        
+    }
+    
     private func createNewAccountAndShowSecretWords() {
         guard let wallet = try? walletsManager.createWallet() else { return }
-        newWalletId = wallet.id
+        newWalletIds = [wallet.id]
         reloadHeader()
         updateCellModels()
         tableView.reloadData()
@@ -180,11 +236,15 @@ class AccountsListViewController: NSViewController {
     }
     
     private func blinkNewWalletCellIfNeeded() {
-        guard let id = newWalletId else { return }
-        newWalletId = nil
-        guard let row = wallets.firstIndex(where: { $0.id == id }), row < cellModels.count else { return }
-        tableView.scrollRowToVisible(row)
-        (tableView.rowView(atRow: row, makeIfNecessary: true) as? AccountCellView)?.blink()
+        guard !newWalletIds.isEmpty else { return }
+        let newRows = wallets.indices.filter { newWalletIds.contains(wallets[$0].id) && $0 < cellModels.count }
+        newWalletIds = []
+        if let lastNewRow = newRows.last {
+            tableView.scrollRowToVisible(lastNewRow)
+            newRows.forEach {
+                (tableView.rowView(atRow: $0, makeIfNecessary: true) as? AccountCellView)?.blink()
+            }
+        }
     }
     
     @objc private func didClickImportAccount() {
@@ -285,7 +345,7 @@ class AccountsListViewController: NSViewController {
     
     private func updateCellModels() {
         if wallets.isEmpty {
-            cellModels = [.addAccountOption(.createNew), .addAccountOption(.importExisting)]
+            cellModels = [.addAccountOption(.createNew), .addAccountOption(.importExisting), .addAccountOption(.importFromMetamask)]
             tableView.shouldShowRightClickMenu = false
         } else {
             cellModels = Array(repeating: CellModel.wallet, count: wallets.count)
@@ -320,6 +380,8 @@ extension AccountsListViewController: NSTableViewDelegate {
                 didClickCreateAccount()
             case .importExisting:
                 didClickImportAccount()
+            case .importFromMetamask:
+                didClickImportFromMetamask()
             }
             return false
         }

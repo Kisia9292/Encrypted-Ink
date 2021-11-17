@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		0D059AD226C2796200EE3023 /* ApprovalSubject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D059AD126C2796200EE3023 /* ApprovalSubject.swift */; };
+		0D5166F326DBB753001CBB4E /* NSRunningApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5166F226DBB753001CBB4E /* NSRunningApplication.swift */; };
+		0D856A9C26D2C0840051C603 /* MetamaskImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D856A9B26D2C0840051C603 /* MetamaskImporter.swift */; };
+		0D856AB426D2C46C0051C603 /* SwiftStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D856AAC26D2C42C0051C603 /* SwiftStore.framework */; };
+		0D856AB526D2C46C0051C603 /* SwiftStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0D856AAC26D2C42C0051C603 /* SwiftStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0DC850E726B73A5900809E82 /* AuthenticationReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC850E626B73A5900809E82 /* AuthenticationReason.swift */; };
 		28BDF30EBC80362870C988B6 /* Pods_Encrypted_Ink.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E2A642C960E4952955E6E82 /* Pods_Encrypted_Ink.framework */; };
 		2C03D1D2269B407900EF10EA /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C03D1D1269B407900EF10EA /* NetworkMonitor.swift */; };
@@ -61,8 +65,35 @@
 		2CE3D015267F73E80032A62E /* LegacyAccountWithKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE3D014267F73E80032A62E /* LegacyAccountWithKey.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		0D856AAB26D2C42C0051C603 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D856AA526D2C42B0051C603 /* SwiftStore.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2EAADF261AF6F94600783BAD;
+			remoteInfo = SwiftStore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0D3EEE5626C9953500EFB880 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				0D856AB526D2C46C0051C603 /* SwiftStore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0D059AD126C2796200EE3023 /* ApprovalSubject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalSubject.swift; sourceTree = "<group>"; };
+		0D5166F226DBB753001CBB4E /* NSRunningApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSRunningApplication.swift; sourceTree = "<group>"; };
+		0D856A9B26D2C0840051C603 /* MetamaskImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetamaskImporter.swift; sourceTree = "<group>"; };
+		0D856AA526D2C42B0051C603 /* SwiftStore.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftStore.xcodeproj; path = SwiftStore/SwiftStore.xcodeproj; sourceTree = "<group>"; };
 		0DC850E626B73A5900809E82 /* AuthenticationReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationReason.swift; sourceTree = "<group>"; };
 		2C03D1D1269B407900EF10EA /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		2C03D1D4269B428C00EF10EA /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
@@ -130,6 +161,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D856AB426D2C46C0051C603 /* SwiftStore.framework in Frameworks */,
 				28BDF30EBC80362870C988B6 /* Pods_Encrypted_Ink.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -151,6 +183,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0D856AA626D2C42B0051C603 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0D856AAC26D2C42C0051C603 /* SwiftStore.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		0DC850E926B73A8200809E82 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -244,6 +284,7 @@
 			isa = PBXGroup;
 			children = (
 				2C6706A4267A6BFE006AAEF2 /* Bundle.swift */,
+				0D5166F226DBB753001CBB4E /* NSRunningApplication.swift */,
 				2C03D1D4269B428C00EF10EA /* Notification.swift */,
 				2C603D0126B6E13F00956955 /* String.swift */,
 				2C6B964B26B9D92500D2C819 /* NSColor.swift */,
@@ -295,6 +336,7 @@
 			isa = PBXGroup;
 			children = (
 				2C03D1D1269B407900EF10EA /* NetworkMonitor.swift */,
+				0D856A9B26D2C0840051C603 /* MetamaskImporter.swift */,
 				2CAA412426C7CD93009F3535 /* ReviewRequester.swift */,
 				2C901C4C268A033100D0926A /* GasService.swift */,
 				2CC0CDBD2692027E0072922A /* PriceService.swift */,
@@ -316,6 +358,7 @@
 		8E59B61AC986C705990A0C02 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0D856AA526D2C42B0051C603 /* SwiftStore.xcodeproj */,
 				3E2A642C960E4952955E6E82 /* Pods_Encrypted_Ink.framework */,
 			);
 			name = Frameworks;
@@ -354,6 +397,7 @@
 				2C19953A2674C4B900A8E370 /* Resources */,
 				2C1995512674C6A100A8E370 /* ShellScript */,
 				DA399964E8F6C2CF5532D1CE /* [CP] Embed Pods Frameworks */,
+				0D3EEE5626C9953500EFB880 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -430,6 +474,12 @@
 			mainGroup = 2C1995332674C4B900A8E370;
 			productRefGroup = 2C19953D2674C4B900A8E370 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 0D856AA626D2C42B0051C603 /* Products */;
+					ProjectRef = 0D856AA526D2C42B0051C603 /* SwiftStore.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				2C19953B2674C4B900A8E370 /* Encrypted Ink */,
@@ -438,6 +488,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		0D856AAC26D2C42C0051C603 /* SwiftStore.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SwiftStore.framework;
+			remoteRef = 0D856AAB26D2C42C0051C603 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		2C19953A2674C4B900A8E370 /* Resources */ = {
@@ -559,6 +619,7 @@
 				2C8A09E82675960D00993638 /* ErrorViewController.swift in Sources */,
 				0D059AD226C2796200EE3023 /* ApprovalSubject.swift in Sources */,
 				2C1995422674C4B900A8E370 /* ImportViewController.swift in Sources */,
+				0D856A9C26D2C0840051C603 /* MetamaskImporter.swift in Sources */,
 				2C8E47A326A322E8007B8354 /* RightClickTableView.swift in Sources */,
 				2C901C472689E6D400D0926A /* ApproveTransactionViewController.swift in Sources */,
 				2CDAB3722675B3F0009F8B97 /* PasswordViewController.swift in Sources */,
@@ -572,6 +633,7 @@
 				2C03D1D5269B428C00EF10EA /* Notification.swift in Sources */,
 				2C1995562674D0F300A8E370 /* Ethereum.swift in Sources */,
 				2C8A09DF267579EA00993638 /* AccountsListViewController.swift in Sources */,
+				0D5166F326DBB753001CBB4E /* NSRunningApplication.swift in Sources */,
 				2C917429267D2A6E00049075 /* Keychain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
